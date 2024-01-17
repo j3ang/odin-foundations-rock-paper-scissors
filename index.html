@@ -13,7 +13,8 @@
 		<script>
 			let playerScore = 0;
 			let computerScore = 0;
-			const choices = ["rock", "paper", "scissors"];
+			let choices = ["rock", "paper", "scissors"];
+
 			const resolveComponent = (component) => {
 				switch (component) {
 					case "rock":
@@ -42,7 +43,6 @@
 				// if cancel button is clicked, exit game
 				if (!playerSelection) return false;
 
-				let choices = ["rock", "paper", "scissors"];
 				playerSelection = choices[playerSelection - 1];
 
 				// validate input
@@ -54,6 +54,7 @@
 				console.log(`You chose ${playerSelection}`);
 				return playerSelection;
 			};
+
 			const createTextEl = (textContent, tag = "p") => {
 				const el = document.createElement(tag);
 				el.textContent = textContent;
@@ -62,7 +63,7 @@
 				document.body.appendChild(el);
 			};
 
-			function playRound(playerSelection, computerSelection) {
+			const playRound = (playerSelection, computerSelection) => {
 				if (playerSelection === computerSelection) return "It's a tie!";
 
 				if (resolveComponent(playerSelection) === computerSelection) {
@@ -72,36 +73,42 @@
 					computerScore++;
 					return `You lose! ${computerSelection} beats ${playerSelection}`;
 				}
-			}
+			};
 
-			// play up to five rounds
-			for (let i = 0; i < 5; i++) {
-				const playerSelection = getPlayerSelection();
-				const computerSelection = getComputerChoice();
+			const game = () => {
+				for (let i = 0; i < 5; i++) {
+					const playerSelection = getPlayerSelection();
+					const computerSelection = getComputerChoice();
 
-				if (!playerSelection) break; // exit game if cancel button is clicked
+					if (!playerSelection) break; // exit game if cancel button is clicked
 
-				const res = playRound(playerSelection, computerSelection);
+					const res = playRound(playerSelection, computerSelection);
 
-				alert(res);
-				createTextEl(res);
+					alert(res);
+					createTextEl(res);
 
-				// best of five rounds
-				if ((playerScore || computerScore) == 3) break;
-			}
+					// best of five rounds
+					if ((playerScore || computerScore) == 3) break;
+				}
 
-			const score = `You vs Computer: ${playerScore} - ${computerScore}`;
-			const isTie = playerScore === computerScore;
-			const winner = playerScore > computerScore ? "You" : "Computer";
-			createTextEl(score, "h2");
-			createTextEl(`${isTie ? "It's a Tie!" : `${winner} win!`}`, "h2");
+				const score = `You vs Computer: ${playerScore} - ${computerScore}`;
+				const isTie = playerScore === computerScore;
+				const winner = playerScore > computerScore ? "You" : "Computer";
+				createTextEl(score, "h2");
+				createTextEl(
+					`${isTie ? "It's a Tie!" : `${winner} win!`}`,
+					"h2"
+				);
 
-			// play again button
-			const btn = document.createElement("button");
-			btn.textContent = "Play again";
-			btn.addEventListener("click", () => location.reload());
+				// play again button
+				const btn = document.createElement("button");
+				btn.textContent = "Play again";
+				btn.addEventListener("click", () => location.reload());
 
-			document.body.appendChild(btn);
+				document.body.appendChild(btn);
+			};
+
+			game(); // let the game being!
 		</script>
 	</body>
 </html>
