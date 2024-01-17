@@ -1,0 +1,107 @@
+<!DOCTYPE html>
+<html lang="en">
+	<head>
+		<meta charset="UTF-8" />
+		<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+		<title>Document</title>
+	</head>
+
+	<body>
+		<h1>Let the games begin!</h1>
+		<hr />
+
+		<script>
+			let playerScore = 0;
+			let computerScore = 0;
+			const choices = ["rock", "paper", "scissors"];
+			const resolveComponent = (component) => {
+				switch (component) {
+					case "rock":
+						return "scissors"; // rock beats scissors
+					case "paper":
+						return "rock"; // paper beats rock
+					case "scissors":
+						return "paper"; // scissors beats paper
+				}
+			};
+
+			const getComputerChoice = () => {
+				const randomIndex = Math.floor(Math.random() * choices.length);
+				return choices[randomIndex];
+			};
+
+			const getPlayerSelection = () => {
+				let playerSelection = parseInt(
+					prompt(
+						"Choose your weapon: \n1. Rock \n2. Paper \n3. Scissors \n\nPress cancel to exit game.",
+						""
+					),
+					10
+				);
+
+				// if cancel button is clicked, exit game
+				if (!playerSelection) return false;
+
+				let choices = ["rock", "paper", "scissors"];
+				playerSelection = choices[playerSelection - 1];
+
+				// validate input
+				if (!playerSelection) {
+					alert("Invalid input. Please try again.");
+					return getPlayerSelection();
+				}
+
+				console.log(`You chose ${playerSelection}`);
+				return playerSelection;
+			};
+			const createTextEl = (textContent, tag = "p") => {
+				const el = document.createElement(tag);
+				el.textContent = textContent;
+
+				// append to DOM
+				document.body.appendChild(el);
+			};
+
+			function playRound(playerSelection, computerSelection) {
+				if (playerSelection === computerSelection) return "It's a tie!";
+
+				if (resolveComponent(playerSelection) === computerSelection) {
+					playerScore++;
+					return `You win! ${playerSelection} beats ${computerSelection}`;
+				} else {
+					computerScore++;
+					return `You lose! ${computerSelection} beats ${playerSelection}`;
+				}
+			}
+
+			// play up to five rounds
+			for (let i = 0; i < 5; i++) {
+				const playerSelection = getPlayerSelection();
+				const computerSelection = getComputerChoice();
+
+				if (!playerSelection) break; // exit game if cancel button is clicked
+
+				const res = playRound(playerSelection, computerSelection);
+
+				alert(res);
+				createTextEl(res);
+
+				// best of five rounds
+				if ((playerScore || computerScore) == 3) break;
+			}
+
+			const score = `You vs Computer: ${playerScore} - ${computerScore}`;
+			const isTie = playerScore === computerScore;
+			const winner = playerScore > computerScore ? "You" : "Computer";
+			createTextEl(score, "h2");
+			createTextEl(`${isTie ? "It's a Tie!" : `${winner} win!`}`, "h2");
+
+			// play again button
+			const btn = document.createElement("button");
+			btn.textContent = "Play again";
+			btn.addEventListener("click", () => location.reload());
+
+			document.body.appendChild(btn);
+		</script>
+	</body>
+</html>
